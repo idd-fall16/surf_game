@@ -6,7 +6,7 @@
 
 **Diego Rivas**: hardware design & prototype, sensor embedding, software troubleshooting & iteration
 
-**Juan Duarte: board assembling and game design/implementation in software.
+**Juan Duarte**: board assembling and game design/implementation in software.
 
 ##Control Scheme
 
@@ -39,7 +39,7 @@ The following figures show screen-captures at each part of the game:
 
 Another important point to mention was that the data obtained from the accelerometer was a little noisy/shaky. Therefore, we implemented a simple filter to give a better user experience of the game. This part was done in the software of the game but it can be implemented in the ReadBoard Duo as well.
 
-A simple demo of the proposed game with the controller incorporated can be found at: https://youtu.be/v2engGUQ7P0
+A simple demo of the proposed game with the controller incorporated can be found at [Video Surf Game](https://youtu.be/v2engGUQ7P0).
 
 
 ##Reflection of development:
@@ -53,5 +53,5 @@ We obtained many experiences in the HW such as product prototyping and manufactu
 * A filter was needed to smooth out the data obtained from the accelerometer; otherwise, the board position was too noisy/shaky.
 * The photodiode was the best option to sense if the player was over the board. Mainly because we could add a hole in the board a put the sensor there, so player would not feel the sensor if she/he step into it. Other sensor like, forze sensor, would bother the player or make the sensor attachment more difficult.
 
-Gameplay video: [Video](https://youtu.be/v2engGUQ7P0)
+Gameplay video: [Video Surf Game](https://youtu.be/v2engGUQ7P0)
 
