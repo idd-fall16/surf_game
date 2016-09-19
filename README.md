@@ -14,7 +14,7 @@ A surf simulation game was designed by pairing a custom balance board peripheral
 
 ![alt text](images/sensors.png "Description goes here")
 
- The objective of the game is for the user to match target angles with your board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to reach try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." The figures below show the placement of the sensors and the balancing mechanism board peripheral.
+ The objective of the game is for the user to match target angles with your board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." The figures below show the placement of the sensors and the balancing mechanism board peripheral.
 
 ![alt text](images/mockup.png "Description goes here")
 
