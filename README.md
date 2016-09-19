@@ -14,17 +14,21 @@ A surf simulation game was designed by pairing a custom balance board peripheral
 
 ![alt text](images/sensors.png "Description goes here")
 
- The objective of the game is for the user to match target angles with your board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to reach try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." Figures \ref{fig:mockup} \ref{fig:top_view} show the physcial balance board peripheral.
+ The objective of the game is for the user to match target angles with your board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to reach try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." The figures below show the placement of the sensors and the balancing mechanism board peripheral.
 
-Board top view
+![alt text](images/mockup.png "Description goes here")
 
-
+![alt text](images/top.png "Description goes here")
 
 Note: accelerometer attachment in the final prototype was done with screws, this first attempt with tape was just for testing.
 
 ##Hardware implementation
 
-The custom balance board peripheral consisted of the Redbear Duo microcontroller, Adafruit’s LIS3DH 3 axis accelerometer, and a CdS photoresistor. Figure X shows the circuit diagram for the balance board peripheral. 
+The custom balance board peripheral consisted of the Redbear Duo microcontroller, Adafruit’s LIS3DH 3 axis accelerometer, and a CdS photoresistor. The figures below show the circuit diagram for the balance board peripheral.
+
+![alt text](images/fritzing_schematic.png "Description goes here")
+
+![alt text](images/IDD_HW3_schematic.png "Description goes here") 
 
 The Redbear Duo was used to communicate with the LIS3DH 3 axis accelerometer through an I2C connection to read accelerometer from each of the sensor’s 3 axis. The data was then normalized to G forces and used to calculate the pitch and roll angles of the sensor. The pitch and roll of the accelerometer informed the backend software of the orientation of the balance board peripheral. Additionally, a resistor divider consisting of a 10k resistor and a photocell was used a digital input to detect when the player was standing on the board. With ambient light reaching the photocell, R2’s resistance was very low, pulling D8 to a high state. When the player was standing over the photocell, the resistance of the R2 became very high, pulling D8 on the Redbear Duo low. Thus, the photocell was used as a switch to indicate if the user was standing on the board. The Redbear Duo sent the pitch, roll, and photocell switch data through a serial connection to a remote computer at a 30Hz sampling rate. 
 
