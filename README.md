@@ -26,7 +26,9 @@ A surf simulation game was designed by pairing a custom balance board peripheral
 
 ![alt text](images/top.png "Top view of board")
 
-Note: accelerometer attachment in the final prototype was done with screws, this first attempt with tape was just for testing.
+Note: accelerometer attachment in the final prototype (as shown below) was done with screws, this first attempt with tape was just for testing.
+![alt text](images/File_000.jpeg "Top view of sensor screwd")
+
 
 ##Hardware implementation
 
