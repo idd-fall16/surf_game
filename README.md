@@ -2,11 +2,11 @@
 
 ##Team & Responsibilities:
 
-**Josh Kay**: Hardware and software implementation
+**Josh Kay**: hardware and software implementation.
 
-**Diego Rivas**: hardware design & prototype, sensor embedding, software troubleshooting & iteration
+**Diego Rivas**: hardware design and prototype, sensor embedding, software troubleshooting and iteration.
 
-**Juan Duarte**: board assembling and game design/implementation in software.
+**Juan Duarte**: board assembling and, game design and implementation in software.
 
 ##Control Scheme
 
