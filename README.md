@@ -12,11 +12,11 @@
 
 ##Control Scheme
 
-A surf simulation game was designed by pairing a custom balance board peripheral with a custom video game designed in Processing. The custom balance board peripheral consisted of the Redbear Duo microcontroller, Adafruit’s LIS3DH 3 axis accelerometer, and a CdS photoresistor. Mounting the accelerometer on the front tip of the balance board allowed the backend software to sense specific angles and correlate that angle to a virtual board displayed in the game. A photocell was used to detect the presence of the player, triggering the game to begin when a user is present. The figure below shows the user behavior sensed by the balance board peripheral.
+A surf simulation game was designed by pairing a custom balance board peripheral with a custom video game designed in Processing. The custom balance board peripheral consisted of the Redbear Duo microcontroller, Adafruit’s LIS3DH 3 axis accelerometer, and a CdS photoresistor. Mounting the accelerometer on the front tip of the balance board allowed the board to sense specific angles. This allowed the backend software to correlate that angle to a virtual board displayed in the game. A photocell was used to detect the presence of the player, triggering the game to begin when a user is present. The figure below shows the user behavior sensed by the balance board peripheral.
 
 ![alt text](images/sensors.png "User behavior sensed by the balance board peripheral")
 
- The objective of the game is for the user to match target angles with your board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." The figures below show the placement of the sensors and the balancing mechanism board peripheral.
+ The objective of the game is for the user to match target angles with the board peripheral in a continuously decreasing amount of time. The user gets points for each angle matched. The user loses if he cannot match the target angle in the allocated time or he falls off the board. The game can be played continuously to try to beat a high score or a target number of positions can be set. When the target number of positions is met, the user wins the game and is brought to a "win screen." The figures below show the placement of the sensors and the balancing mechanism board peripheral.
 
 ![alt text](images/mockup.png "Placement of sensors and balance mechanism")
 
@@ -36,7 +36,7 @@ The Redbear Duo was used to communicate with the LIS3DH 3 axis accelerometer thr
 
 ##Game Design:
 
-The game was designed and coded from scratch. As mentioned in the summary, the game starts once the player steps on, triggering a photosensor by covering it with the front foot. The player matches target angles with the board in a continuously decreasing amount of time, and tries to maximize the score by getting the maximum number of matches possible.
+The game was designed and coded from scratch. As mentioned in the summary, the game starts once the player steps on the board, triggering a photosensor by covering it with the front foot. The player matches target angles with the board in a continuously decreasing amount of time, and tries to maximize the score by getting the maximum number of matches possible.
 
 The proposed game was implemented as the following state machine:
 
