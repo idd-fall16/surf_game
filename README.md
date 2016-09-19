@@ -1,7 +1,7 @@
 # HW3 Surf Game
 
 ![alt text](images/SurfSim.gif "Surf Game")
-
+[Video Surf Game](https://youtu.be/v2engGUQ7P0)
 ##Team & Responsibilities:
 
 **Josh Kay**: hardware and software implementation.
