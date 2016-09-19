@@ -38,11 +38,15 @@ The game was designed and coded from scratch. As mentioned in the summary, the g
 
 The proposed game was implemented as the following state machine:
 
+![alt text](images/state_machine.png "state_machine")
+
 The game was implemented in the Processing 3 open source computer programming language. It communicates with the RedBear Duo board using serial port communications, receiving signals from accelerometer and photodiode detector, that are then utilized to take decisions in the state machine of the game.
 
 In order to obtain a good quality graphic for the game and a sense of reality, GIF animations were incorporated at each state of the game, together with sounds and a background song.
 
 The following figures show screen-captures at each part of the game:
+
+![alt text](images/screens.png "Screens")
 
 
 Another important point to mention was that the data obtained from the accelerometer was a little noisy/shaky. Therefore, we implemented a simple filter to give a better user experience of the game. This part was done in the software of the game but it can be implemented in the ReadBoard Duo as well.
