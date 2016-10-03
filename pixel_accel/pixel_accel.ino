@@ -18,6 +18,9 @@ SYSTEM_MODE(SEMI_AUTOMATIC);
 #define STRIP0 0
 #define STRIP1 20
 #define STRIP2 40
+#define PITCH_MAX 45
+#define ROLL_MAX 45
+#define BUTTON D8
 
 #define PI 3.1415
 
@@ -61,6 +64,9 @@ void loop() {
   //Get accelerometer data
    LIS3DH_getData();
 
+  //send accelerometer data
+   //LIS3DH_sendData();
+
    //apply avergage filter
     if(sample_count > SAMPLES)
       sample_count = 0;
@@ -86,17 +92,17 @@ void loop() {
 void tilt_light(void){
   
   //map roll to a pixel value for center strip
-  int light_roll_center = map(average_roll,-90,90,0,N_CENTER);
+  int light_pitch_center = map(average_pitch,-PITCH_MAX,PITCH_MAX,0,N_CENTER);
   //map roll to a pixel value for side strip
-  int light_roll_side = map(average_roll,-90,90,0,N_SIDE0);
+  int light_pitch_side = map(average_pitch,-PITCH_MAX,PITCH_MAX,0,N_SIDE0);
 
   //map light pitch RGB value
-  int light_pitch = map(abs(average_pitch),0,90,0,255);
+  int light_roll = map(abs(average_roll),0,ROLL_MAX,0,255);
 
   //set color for center strip
     for(uint16_t i=0; i<N_CENTER; i++) {
       //set each pixel
-      strip_center.setPixelColor(i,strip_center.Color((round(color_step_center*abs(light_roll_center-i))),(round(color_step_center*abs(light_roll_center-i))),(255)));
+      strip_center.setPixelColor(i,strip_center.Color((round(color_step_center*abs(light_pitch_center-i))),(round(color_step_center*abs(light_pitch_center-i))),(255)));
       //show lights  
       strip_center.show();
      }
@@ -107,18 +113,18 @@ void tilt_light(void){
       //Determine polarity of pitch angle
       if(average_pitch > 0){
         //set each pixel
-         strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_roll_side-i)),light_pitch,255));
-         strip_side1.setPixelColor(i,strip_side1.Color(light_pitch,round(color_step_center*abs(light_roll_side-i)),255));
+         strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_pitch_side-i)),light_roll,255));
+         strip_side1.setPixelColor(i,strip_side1.Color(light_roll,round(color_step_center*abs(light_pitch_side-i)),255));
       }
-      else if(average_pitch <0) {
+      else if(average_pitch < 0) {
           //set each pixel
-          strip_side0.setPixelColor(i,strip_side0.Color(light_pitch,round(color_step_center*abs(light_roll_side-i)),255));
-          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_roll_side-i)),light_pitch,255));
+          strip_side0.setPixelColor(i,strip_side0.Color(light_roll,round(color_step_center*abs(light_pitch_side-i)),255));
+          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_pitch_side-i)),light_roll,255));
       }
       else {
           //set each pixel
-          strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_roll_side-i)),round(color_step_center*abs(light_roll_side-i)),255));
-          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_roll_side-i)),round(color_step_center*abs(light_roll_side-i)),255));
+          strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_pitch_side-i)),round(color_step_center*abs(light_pitch_side-i)),255));
+          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_pitch_side-i)),round(color_step_center*abs(light_pitch_side-i)),255));
       }
 
       //show lights
@@ -143,11 +149,11 @@ boolean LIS3DH_init(void) {
         return 1;
 }
 
-/*
+
 void LIS3DH_sendData(void) {
-        Serial.printf("%f,%f,%i\n",accel_data.pitch,accel_data.roll,!digitalRead(button));
+        Serial.printf("%f,%f,%i\n",accel_data.pitch,accel_data.roll,!digitalRead(BUTTON));
 }
-*/
+
 
 void LIS3DH_getData(void) {
         //REMINDER, I2C Pins SDA1==D0, SCL1 == D1
