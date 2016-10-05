@@ -32,7 +32,7 @@ PFont font_game;
 //time control variables
 int time_game;
 int time_level=20;
-int hold = 1000;
+int hold = 500;
 int hold_time, time;
 int time_to_fail=20;
 int time_to_fail_decrease=0;
@@ -47,7 +47,7 @@ int score=0;
 
 //average
 int angle_count = 0;
-int samples = 10;
+int samples = 5;
 float[] pitch_array = new float[10];
 float[] roll_array = new float[10];
 float total_roll = 0;
@@ -133,7 +133,7 @@ void draw() {
       state=3;
     }
 
-    if (score==4){ //goes to winning score
+    if (score==6){ //goes to winning score
       state=5;
     }
     break;
@@ -241,7 +241,7 @@ void play() {
 
   //check if player is close to target, NEED TO BE FIXED
   distance = PVector.dist(vector_target,vector_player);
-  if (distance<5.0){
+  if (distance<8.0){
     //change color screen when target is close
     tintr= 0;
     tintb= 0;
