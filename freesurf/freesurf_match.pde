@@ -1,6 +1,5 @@
 import processing.sound.*;
 import processing.net.*;
-import processing.serial.*;  
 boolean data_mode = true; //flase for serial, true for wifi
 
 //Graphic variables
