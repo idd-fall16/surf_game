@@ -1,4 +1,4 @@
-import processing.sound.*;
+    import processing.sound.*;
 
 //Graphic variables
 PGraphics boardaux;
@@ -123,17 +123,19 @@ void draw() {
     break;
   case 1: //player playing
     animation1.display(0, 0);
+    /*
     if (feetsensor==0) {
       state=3;       
     } else {
       play();
-    }
+    }*/
+    play();
     //if time hits 0, you lose
     if (time_game<=0){
       state=3;
     }
 
-    if (score==4){ //goes to winning score
+    if (score==5){ //goes to winning score
       state=5;
     }
     break;
@@ -178,6 +180,8 @@ void draw() {
     println("default");   // Does not execute
     break;
   }
+  myPort.write(state);
+  print(state);
 }
 
 void start_screen() {
@@ -213,7 +217,7 @@ void play() {
   float distance;
   
   if (new_target) {
-    vector_target.set(random(-10, 10),random(-6, 6));//pitch,roll
+    vector_target.set(random(-15, 15),random(-10, 10));//pitch,roll
     vector_delta = PVector.sub(vector_target, vector_target_draw);
     vector_delta = vector_delta.div(frame_targe_transition);
     count_target_update = 0;
@@ -264,7 +268,7 @@ void play() {
   time = millis();
   //check if player has hold postion for a "hold" time
   if ((time - hold_time >= hold) && holding) {
-    score = score+2;
+    score = score+1;
     i++;
     if(i>=num_string)
       i = 0;     

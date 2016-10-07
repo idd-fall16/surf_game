@@ -14,13 +14,15 @@ SYSTEM_MODE(SEMI_AUTOMATIC);
 #define PIN_SIDE1      D2
 #define N_SIDE1 14
 #define PIXEL_TYPE WS2812B
-#define SAMPLES 5
+#define SAMPLES 10
 #define STRIP0 0
 #define STRIP1 20
 #define STRIP2 40
-#define PITCH_MAX 45
-#define ROLL_MAX 45
-#define BUTTON D8
+#define PITCH_MAX 25
+#define ROLL_MAX 30
+#define FOOT_SENSOR D8
+#define ROLL_LIMIT 3.5
+#define BRIGHTNESS 255
 
 #define PI 3.1415
 
@@ -46,7 +48,17 @@ Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 int color_step_center = 255/N_CENTER;
 int color_step_side = 255/N_SIDE0;
 int sample_count = 0;
- 
+int state = 0;
+int brightness = 0;
+int lose_signal = 0;
+
+
+void play(void);
+void isr(void);
+
+long debounceDelay = 50;    // the debounce time in ms
+Timer timer(debounceDelay, play, true); // oneshot
+
 void setup() {
   WiFi.off(); //turn off Wifi
 
@@ -58,14 +70,118 @@ void setup() {
   //start acceleromtere
   LIS3DH_init();
 
+  //attachInterrupt(FOOT_SENSOR, isr, CHANGE); //CHANGE, RISING or FALLING  
+  attachInterrupt(FOOT_SENSOR, isr, FALLING); //CHANGE, RISING or FALLING  
 }
  
 void loop() {
-  //Get accelerometer data
+
+   //Get accelerometer data
    LIS3DH_getData();
 
   //send accelerometer data
-   //LIS3DH_sendData();
+   LIS3DH_sendData();
+
+  //Get state
+  get_state();
+  
+  switch(state){
+    case 0:
+      idle();
+      break;
+      
+    case 1:
+      play();
+      break;
+
+    case 3:
+      lose();
+      break;
+    
+    case 4:
+      break;
+
+    case 5:
+      break;
+    
+    default: 
+      state = 0;
+        
+  }
+  
+
+}
+
+void get_state(void){
+  //Check if player has fallen
+  if (Serial.available()) { // If data is available to read,
+    char state_char = (Serial.read()); // read it and store it in state
+    state = (int)(state_char);
+  }
+}
+
+void idle(void){
+    int max_brightness = 50;
+    for(uint16_t j=0; j<(2*max_brightness); j++) {
+      //set color for center strip
+      get_state();
+      if(state != 0 && state != 4)
+        break;
+      if(j >= max_brightness)
+        brightness--;
+        else
+          brightness++;
+          
+      for(uint16_t i=0; i<N_CENTER; i++) {
+        //set each pixel
+        strip_center.setColor(i,0,0,brightness);
+        //show lights  
+        strip_center.show();
+      }
+        for(uint16_t i=0; i<N_SIDE0; i++) {
+        //set each pixel
+        strip_side0.setColor(i,0,0,brightness);
+        strip_side1.setColor(i,0,0,brightness);
+        //show lights  
+        strip_side0.show();
+        strip_side1.show();
+      }
+      //delay(5);
+    }
+}
+
+
+void lose(void){
+    int max_brightness = 25;
+    for(uint16_t j=0; j<(2*max_brightness); j++) {
+      //set color for center strip
+      get_state();
+      if(state != 3 && state != 4)
+        break;
+      if(j >= max_brightness)
+        brightness--;
+        else
+          brightness++;
+          
+      for(uint16_t i=0; i<N_CENTER; i++) {
+        //set each pixel
+        strip_center.setColor(i,brightness,0,0);
+        //show lights  
+        strip_center.show();
+      }
+        for(uint16_t i=0; i<N_SIDE0; i++) {
+        //set each pixel
+        strip_side0.setColor(i,brightness,0,0);
+        strip_side1.setColor(i,brightness,0,0);
+        //show lights  
+        strip_side0.show();
+        strip_side1.show();
+      }
+      //delay(5);
+    }
+}
+
+void play(void){
 
    //apply avergage filter
     if(sample_count > SAMPLES)
@@ -98,11 +214,13 @@ void tilt_light(void){
 
   //map light pitch RGB value
   int light_roll = map(abs(average_roll),0,ROLL_MAX,0,255);
+  if(abs(average_roll) < ROLL_LIMIT)
+    light_roll = 0;
 
   //set color for center strip
     for(uint16_t i=0; i<N_CENTER; i++) {
       //set each pixel
-      strip_center.setPixelColor(i,strip_center.Color((round(color_step_center*abs(light_pitch_center-i))),(round(color_step_center*abs(light_pitch_center-i))),(255)));
+      strip_center.setColor(i,(round(color_step_center*abs(light_pitch_center-i))),(round(color_step_center*abs(light_pitch_center-i))),255);
       //show lights  
       strip_center.show();
      }
@@ -111,20 +229,20 @@ void tilt_light(void){
     for(uint16_t i=0; i<N_SIDE0; i++) {
 
       //Determine polarity of pitch angle
-      if(average_pitch > 0){
+      if((average_roll > 0) && (abs(average_roll) > ROLL_LIMIT)){
         //set each pixel
-         strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_pitch_side-i)),light_roll,255));
-         strip_side1.setPixelColor(i,strip_side1.Color(light_roll,round(color_step_center*abs(light_pitch_side-i)),255));
+         strip_side0.setColor(i,round(color_step_side*abs(light_pitch_side-i)),light_roll,255);
+         strip_side1.setColor(i,light_roll,round(color_step_side*abs(light_pitch_side-i)),255);
       }
-      else if(average_pitch < 0) {
+      else if((average_roll < 0) && (abs(average_roll) > ROLL_LIMIT)) {
           //set each pixel
-          strip_side0.setPixelColor(i,strip_side0.Color(light_roll,round(color_step_center*abs(light_pitch_side-i)),255));
-          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_pitch_side-i)),light_roll,255));
+          strip_side0.setColor(i,light_roll,round(color_step_side*abs(light_pitch_side-i)),255);
+          strip_side1.setColor(i,round(color_step_side*abs(light_pitch_side-i)),light_roll,255);
       }
       else {
           //set each pixel
-          strip_side0.setPixelColor(i,strip_side0.Color(round(color_step_center*abs(light_pitch_side-i)),round(color_step_center*abs(light_pitch_side-i)),255));
-          strip_side1.setPixelColor(i,strip_side1.Color(round(color_step_center*abs(light_pitch_side-i)),round(color_step_center*abs(light_pitch_side-i)),255));
+          strip_side0.setColor(i,round(color_step_side*abs(light_pitch_side-i)),round(color_step_side*abs(light_pitch_side-i)),255);
+          strip_side1.setColor(i,round(color_step_side*abs(light_pitch_side-i)),round(color_step_side*abs(light_pitch_side-i)),255);
       }
 
       //show lights
@@ -133,6 +251,7 @@ void tilt_light(void){
 
   }
 
+  //Serial.printf("Average pitch: %f \t Light pitch: %d \n Average roll: %f \t Light Roll: %d \n",average_pitch,light_pitch_side,average_roll,light_roll);
   
 }
 
@@ -151,7 +270,7 @@ boolean LIS3DH_init(void) {
 
 
 void LIS3DH_sendData(void) {
-        Serial.printf("%f,%f,%i\n",accel_data.pitch,accel_data.roll,!digitalRead(BUTTON));
+        Serial.printf("%f,%f,%i\n",-accel_data.roll,accel_data.pitch,!digitalRead(FOOT_SENSOR));
 }
 
 
@@ -186,4 +305,20 @@ int8_t limit(int val) {
   return val;
 }
 
+
+void isr()
+{ 
+  noInterrupts();
+   //Get accelerometer data
+   LIS3DH_getData();
+
+  //send accelerometer data
+   LIS3DH_sendData();
+
+  //Get state
+  get_state();
+        
+
+  interrupts();
+}
 
