@@ -135,7 +135,7 @@ void draw() {
       state=3;
     }
 
-    if (score==5){ //goes to winning score
+    if (score==1000){ //goes to winning score
       state=5;
     }
     break;
